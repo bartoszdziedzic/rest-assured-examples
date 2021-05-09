@@ -57,7 +57,7 @@ public class FileManager {
 
 
     public static void deleteFile(String path) {
-        File file = new File("/target/" + path);
+        File file = new File(PROJECT_PATH + "/target/" + path);
         boolean result = file.delete();
         assertTrue(result);
     }
