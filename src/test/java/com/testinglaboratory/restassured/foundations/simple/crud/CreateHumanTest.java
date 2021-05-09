@@ -43,9 +43,9 @@ public class CreateHumanTest {
         Faker fake = new Faker(new Locale("PL_pl"));
         String firstName = fake.name().firstName();
         String lastName = fake.name().lastName();
-        JSONObject human = new JSONObject();
-        human.put("first_name", firstName);
-        human.put("last_name", lastName);
+        JsonObject human = new JsonObject();
+        human.addProperty("first_name", firstName);
+        human.addProperty("last_name", lastName);
         log.info(human.toString());
         given()
                 .header("Content-Type", "application/json")
