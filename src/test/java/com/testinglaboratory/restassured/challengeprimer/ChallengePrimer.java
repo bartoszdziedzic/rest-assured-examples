@@ -13,17 +13,6 @@ import static io.restassured.RestAssured.when;
 @Slf4j
 public class ChallengePrimer {
 
-    String userName = "yodamaster";
-    String userPassword = "dupadupa";
-    String userNameWrong = "a";
-    String userPasswordWrong = "a";
-
-    @BeforeAll
-    public static void setUp() {
-        RestAssured.baseURI = "http://localhost:8082/";
-        RestAssured.basePath = "challenge/primer/";
-    }
-
     @Test
     void getInformation(){
        when().get("information")
@@ -43,7 +32,6 @@ public class ChallengePrimer {
     }
 
     //"${flag_hello_there}" & "${flag_general_kenobi}"
-    //moze opierdzielic to jakims if'em?
     @Test
     void getFlagById(){
         when().get("flag/1")
@@ -52,70 +40,70 @@ public class ChallengePrimer {
                 .then().log().everything();
     }
 
-    @Test
-    void postRegisterSuccessful(){
-        JSONObject newUser= new JSONObject();
-        newUser.put("username", userName);
-        newUser.put("password", userPassword);
-
-        ResponseBodyExtractionOptions responseBody =
-        given()
-                .header("Content-Type", "application/json")
-                .when()
-                .body(newUser.toMap())
-                .post("/register")
-                .then()
-                .log().everything().extract().body();
-        System.out.println(responseBody.jsonPath().getString("key"));;
-    }
-
-    //"${flag_im_still_here_captain}"
-    @Test
-    void postRegisterAgain(){
-        JSONObject newUser= new JSONObject();
-        newUser.put("username", userName);
-        newUser.put("password", userPassword);
-
-        given()
-            .header("Content-Type", "application/json")
-            .when()
-            .body(newUser.toMap())
-            .post("/register")
-            .then()
-            .statusCode(400)
-            .log().everything();
-    }
-
-    @Test
-    void postLogin(){
-        JSONObject newUser= new JSONObject();
-        newUser.put("username", userName);
-        newUser.put("password", userPassword);
-
-        given()
-                .header("Content-Type", "application/json")
-                .when()
-                .body(newUser.toMap())
-                .post("/login")
-                .then()
-                .statusCode(202)
-                .log().everything();
-    }
+//    @Test
+//    void postRegisterSuccessful(){
+//        JSONObject newUser= new JSONObject();
+//        newUser.put("username", userName);
+//        newUser.put("password", userPassword);
+//
+//        ResponseBodyExtractionOptions responseBody =
+//        given()
+//                .header("Content-Type", "application/json")
+//                .when()
+//                .body(newUser.toMap())
+//                .post("/register")
+//                .then()
+//                .log().everything().extract().body();
+//        System.out.println(responseBody.jsonPath().getString("key"));
+//    }
+//
+//    //"${flag_im_still_here_captain}"
+//    @Test
+//    void postRegisterAgain(){
+//        JSONObject newUser= new JSONObject();
+//        newUser.put("username", userName);
+//        newUser.put("password", userPassword);
+//
+//        given()
+//            .header("Content-Type", "application/json")
+//            .when()
+//            .body(newUser.toMap())
+//            .post("/register")
+//            .then()
+//            .statusCode(400)
+//            .log().everything();
+//    }
+//
+//    @Test
+//    void postLogin(){
+//        JSONObject newUser= new JSONObject();
+//        newUser.put("username", userName);
+//        newUser.put("password", userPassword);
+//
+//        given()
+//                .header("Content-Type", "application/json")
+//                .when()
+//                .body(newUser.toMap())
+//                .post("/login")
+//                .then()
+//                .statusCode(202)
+//                .log().everything();
+//    }
 
     //"${flag_naughty_aint_ya}"
-    @Test
-    void postLoginUnsuccessful(){
-        JSONObject newUser= new JSONObject();
-        newUser.put("username", userNameWrong);
-        newUser.put("password", userPasswordWrong);
-
-        given()
-                .header("Content-Type", "application/json")
-                .when()
-                .body(newUser.toMap())
-                .post("/login")
-                .then()
-                .statusCode(401)
-                .log().everything();
-    }
+//    @Test
+//    void postLoginUnsuccessful(){
+//        JSONObject newUser= new JSONObject();
+//        newUser.put("username", userNameWrong);
+//        newUser.put("password", userPasswordWrong);
+//
+//        given()
+//                .header("Content-Type", "application/json")
+//                .when()
+//                .body(newUser.toMap())
+//                .post("/login")
+//                .then()
+//                .statusCode(401)
+//                .log().everything();
+//    }
 }
