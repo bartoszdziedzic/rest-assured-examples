@@ -20,7 +20,7 @@ public class loginUser extends registerUser{
                 .header("Content-Type", "application/json")
                 .when()
                 .body(newUser.toMap())
-                .post("/register")
+                .post("/login")
                 .then()
                 .log().everything().extract().response();
     }
