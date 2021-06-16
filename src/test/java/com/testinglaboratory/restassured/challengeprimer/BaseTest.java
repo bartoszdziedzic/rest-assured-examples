@@ -11,16 +11,10 @@ import java.util.Locale;
 
 import static io.restassured.RestAssured.given;
 
-public class baseTest {
+public class BaseTest {
 
     protected static final Faker fake = new Faker(new Locale("PL_pl"));
-    protected String userName;
-    protected String userPassword;
-
-    public baseTest(String userName, String userPassword) {
-        this.userName = userName;
-        this.userPassword = userPassword;
-    }
+    protected User user;
 
     @BeforeAll
     public static void setUp() {
@@ -30,7 +24,6 @@ public class baseTest {
 
     @BeforeEach
     protected void generateCredentials() {
-        userName = fake.name().username();
-        userPassword = fake.yoda().quote();
+        user = new User(fake.name().username(), fake.yoda().quote());
     }
 }

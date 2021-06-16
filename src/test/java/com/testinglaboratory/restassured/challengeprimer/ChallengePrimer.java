@@ -1,6 +1,7 @@
 package com.testinglaboratory.restassured.challengeprimer;
 
 import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import io.restassured.response.ResponseBodyExtractionOptions;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
@@ -11,7 +12,7 @@ import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
 
 @Slf4j
-public class ChallengePrimer {
+public class ChallengePrimer extends BaseTest {
 
     @Test
     void getInformation(){
@@ -40,70 +41,30 @@ public class ChallengePrimer {
                 .then().log().everything();
     }
 
-//    @Test
-//    void postRegisterSuccessful(){
-//        JSONObject newUser= new JSONObject();
-//        newUser.put("username", userName);
-//        newUser.put("password", userPassword);
-//
-//        ResponseBodyExtractionOptions responseBody =
-//        given()
-//                .header("Content-Type", "application/json")
-//                .when()
-//                .body(newUser.toMap())
-//                .post("/register")
-//                .then()
-//                .log().everything().extract().body();
-//        System.out.println(responseBody.jsonPath().getString("key"));
-//    }
-//
-//    //"${flag_im_still_here_captain}"
-//    @Test
-//    void postRegisterAgain(){
-//        JSONObject newUser= new JSONObject();
-//        newUser.put("username", userName);
-//        newUser.put("password", userPassword);
-//
-//        given()
-//            .header("Content-Type", "application/json")
-//            .when()
-//            .body(newUser.toMap())
-//            .post("/register")
-//            .then()
-//            .statusCode(400)
-//            .log().everything();
-//    }
-//
-//    @Test
-//    void postLogin(){
-//        JSONObject newUser= new JSONObject();
-//        newUser.put("username", userName);
-//        newUser.put("password", userPassword);
-//
-//        given()
-//                .header("Content-Type", "application/json")
-//                .when()
-//                .body(newUser.toMap())
-//                .post("/login")
-//                .then()
-//                .statusCode(202)
-//                .log().everything();
-//    }
+    @Test
+    void postRegisterSuccessful(){
+        Response response = RegisterUser.registerUserMethod(user);
+        assert response.jsonPath().get("message").equals("User " + user.getUsername() + " registered");
+ }
 
-    //"${flag_naughty_aint_ya}"
-//    @Test
-//    void postLoginUnsuccessful(){
-//        JSONObject newUser= new JSONObject();
-//        newUser.put("username", userNameWrong);
-//        newUser.put("password", userPasswordWrong);
-//
-//        given()
-//                .header("Content-Type", "application/json")
-//                .when()
-//                .body(newUser.toMap())
-//                .post("/login")
-//                .then()
-//                .statusCode(401)
-//                .log().everything();
-//    }
+    //"${flag_im_still_here_captain}"
+    @Test
+    void postRegisterAgain(){
+        RegisterUser.registerUserMethod(user);
+        Response response = RegisterUser.registerUserMethod(user).then().log().everything().extract().response();
+        assert response.jsonPath().get("flag").equals("${flag_im_still_here_captain}");
+    }
+
+    @Test
+    void postLogin(){
+        RegisterUser.registerUserMethod(user);
+        Response response = LoginUser.loginUserMethod(user);
+        assert response.jsonPath().get("message").equals("Welcome, " + user.getUsername() + ", in the Primer!");
+    }
+
+//    "${flag_naughty_aint_ya}"
+    @Test
+    void postLoginUnsuccessful(){
+        assert LoginUser.loginUserMethod(user).jsonPath().get("flag").equals("${flag_naughty_aint_ya}");
+    }
 }
