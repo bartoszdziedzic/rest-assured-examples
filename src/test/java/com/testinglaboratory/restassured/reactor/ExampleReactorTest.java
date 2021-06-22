@@ -7,13 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.when;
 
-public class ExampleReactorTest {
-
-    @BeforeAll
-    public static void setUp() {
-        RestAssured.baseURI = "http://localhost:8083/";
-        RestAssured.basePath = "challenge/reactor/";
-    }
+public class ExampleReactorTest extends BaseSetUp{
 
     @Test
     void checkInformation(){
