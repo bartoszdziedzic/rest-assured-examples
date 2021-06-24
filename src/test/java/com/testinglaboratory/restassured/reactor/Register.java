@@ -10,6 +10,6 @@ public class Register {
                 .header("Content-Type", "application/json")
                 .when()
                 .body(user)
-                .post("/register");
+                .post("/desk");
     }
 }

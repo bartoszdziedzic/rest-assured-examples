@@ -21,6 +21,6 @@ public class BaseSetUp {
 
     @BeforeEach
     protected void generateCredentials() {
-        user = new ReactorUser(fake.name().username(), fake.yoda().quote());
+        user = new ReactorUser(fake.name().username());
     }
 }

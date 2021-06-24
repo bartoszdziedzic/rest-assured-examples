@@ -6,6 +6,5 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ReactorUser {
-    String username;
-    String password;
+    String name;
 }
