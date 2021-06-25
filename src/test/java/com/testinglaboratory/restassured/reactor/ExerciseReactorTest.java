@@ -40,6 +40,8 @@ public class ExerciseReactorTest extends BaseSetUp{
                 .get(key + "/control_room")
                 .then()
                 .log()
-                .everything();
+                .everything()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
     }
 }
