@@ -36,8 +36,8 @@ public class ExerciseReactorTest extends BaseSetUp{
     }
 
     @Test
-    void analyseReactor(){
-        reactorAnalysis();
+    void reactorAnalysis(){
+        analyseReactor();
     }
 
     String registerMessage = "Take the key to your control room. " +
@@ -77,7 +77,7 @@ public class ExerciseReactorTest extends BaseSetUp{
         assert response.jsonPath().get("flag").equals("${flag_curious_arent_we_" + user.name + "}");
     }
 
-    private void reactorAnalysis(){
+    private void analyseReactor(){
         Response response = Register.registerUser(user);
 
         String key = response.jsonPath().get("key");
