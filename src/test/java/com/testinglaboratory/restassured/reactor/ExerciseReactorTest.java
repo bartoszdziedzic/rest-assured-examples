@@ -35,6 +35,11 @@ public class ExerciseReactorTest extends BaseSetUp{
         checkReactorStatus();
     }
 
+    @Test
+    void analyseReactor(){
+        reactorAnalysis();
+    }
+
     String registerMessage = "Take the key to your control room. " +
             "Keep it safe. use it as resource path to check on your RMBK-100 reactor! Use following: " +
             "/{key}/control_room to gain knowledge how to operate reactor. You may see if the " +
@@ -70,5 +75,19 @@ public class ExerciseReactorTest extends BaseSetUp{
                 .statusCode(HttpStatus.SC_OK).extract().response();
 
         assert response.jsonPath().get("flag").equals("${flag_curious_arent_we_" + user.name + "}");
+    }
+
+    private void reactorAnalysis(){
+        Response response = Register.registerUser(user);
+
+        String key = response.jsonPath().get("key");
+
+        when()
+                .get(key + "/control_room/analysis")
+                .then()
+                .log()
+                .everything()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK).extract().response();
     }
 }
