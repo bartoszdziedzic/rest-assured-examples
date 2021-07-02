@@ -4,6 +4,7 @@ import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Test;
 
+import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.when;
 
 //TODO EXERCISE create tests for Reactor challenge
@@ -14,6 +15,37 @@ public class ExerciseReactorTest extends BaseSetUp{
             "/{key}/control_room to gain knowledge how to operate reactor. You may see if the " +
             "core is intact here: /{key}/reactor_core . If anything goes wrong push AZ-5 safety " +
             "button to put all control rods in place!Good luck Commander.";
+
+    private Response acquireControlRoomCredentials(){
+        Response response = Register.registerUser(user);
+
+        String key = response.jsonPath().get("key");
+
+        when()
+                .get(key + "/control_room")
+                .then()
+                .log()
+                .everything()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+        return response;
+    }
+
+    private void checkReactorStatus(){
+        Response response = Register.registerUser(user);
+
+        String key = response.jsonPath().get("key");
+
+        response = when()
+                .get(key + "/reactor_core")
+                .then()
+                .log()
+                .everything()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK).extract().response();
+
+        assert response.jsonPath().get("flag").equals("${flag_curious_arent_we_" + user.name + "}");
+    }
 
     @Test
     void getInformation(){
@@ -32,16 +64,11 @@ public class ExerciseReactorTest extends BaseSetUp{
 
     @Test
     void getControlRoom(){
-        Response response = Register.registerUser(user);
+        Response response = acquireControlRoomCredentials();
+    }
 
-        String key = response.jsonPath().get("key");
-
-        when()
-                .get(key + "/control_room")
-                .then()
-                .log()
-                .everything()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK);
+    @Test
+    void reactorStatus(){
+        checkReactorStatus();
     }
 }
