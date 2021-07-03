@@ -4,6 +4,7 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseBodyExtractionOptions;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ public class ChallengePrimer extends BaseTest {
                .get("information")
                .then()
                .log()
-               .everything();
+               .everything().assertThat().statusCode(HttpStatus.SC_OK);
     }
 
     @Test
@@ -29,7 +30,7 @@ public class ChallengePrimer extends BaseTest {
                 .get("tryout")
                 .then()
                 .log()
-                .everything();
+                .everything().assertThat().statusCode(HttpStatus.SC_OK);
     }
 
     @Test
@@ -38,7 +39,7 @@ public class ChallengePrimer extends BaseTest {
                 .get("flag")
                 .then()
                 .log()
-                .everything();
+                .everything().assertThat().statusCode(HttpStatus.SC_OK);
     }
 
     //"${flag_hello_there}" & "${flag_general_kenobi}"
@@ -48,13 +49,13 @@ public class ChallengePrimer extends BaseTest {
                 .get("flag/1")
                 .then()
                 .log()
-                .everything();
+                .everything().assertThat().statusCode(HttpStatus.SC_OK);
 
         when()
                 .get("flag/6")
                 .then()
                 .log()
-                .everything();
+                .everything().assertThat().statusCode(HttpStatus.SC_OK);
     }
 
     @Test
