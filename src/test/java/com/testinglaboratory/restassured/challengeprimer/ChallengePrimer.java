@@ -7,7 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+
 import static org.hamcrest.Matchers.equalTo;
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
@@ -65,6 +69,23 @@ public class ChallengePrimer extends BaseTest {
                 .log()
                 .everything().assertThat().statusCode(HttpStatus.SC_OK)
                 .body("flag",equalTo("${flag_general_kenobi}"));
+    }
+
+    @ParameterizedTest
+    @DisplayName("Check which id's have flags")
+    @ValueSource(ints = {1,6})
+    void checkTwoFlags(int flagID) {
+        Response response = given()
+                .pathParam("flagId",flagID)
+                .when()
+                .get("flag/{flagId}")
+                .then()
+                .log()
+                .everything()
+                .statusCode(HttpStatus.SC_OK)
+                .extract().response();
+
+        assertThat(response.jsonPath().getString("flag")).matches("\\$\\{flag_.*}");
     }
 
     @Test
