@@ -16,29 +16,45 @@ public class ChallengePrimer extends BaseTest {
 
     @Test
     void getInformation(){
-       when().get("information")
-       .then().log().everything();
+       when()
+               .get("information")
+               .then()
+               .log()
+               .everything();
     }
 
     @Test
     void getTryout(){
-        when().get("tryout")
-                .then().log().everything();
+        when()
+                .get("tryout")
+                .then()
+                .log()
+                .everything();
     }
 
     @Test
     void getFlag(){
-        when().get("flag")
-                .then().log().everything();
+        when()
+                .get("flag")
+                .then()
+                .log()
+                .everything();
     }
 
     //"${flag_hello_there}" & "${flag_general_kenobi}"
     @Test
     void getFlagById(){
-        when().get("flag/1")
-                .then().log().everything();
-        when().get("flag/6")
-                .then().log().everything();
+        when()
+                .get("flag/1")
+                .then()
+                .log()
+                .everything();
+
+        when()
+                .get("flag/6")
+                .then()
+                .log()
+                .everything();
     }
 
     @Test
