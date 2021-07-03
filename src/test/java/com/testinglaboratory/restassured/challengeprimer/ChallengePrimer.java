@@ -91,7 +91,9 @@ public class ChallengePrimer extends BaseTest {
     @Test
     void postRegisterSuccessful(){
         Response response = RegisterUser.registerUserMethod(user);
-        assert response.jsonPath().get("message").equals("User " + user.getUsername() + " registered");
+//        assert response.jsonPath().get("message").equals("User " + user.getUsername() + " registered");
+        assertThat(response.jsonPath().getString("message"))
+                .isEqualTo("User " + user.getUsername() + " registered");
  }
 
     //"${flag_im_still_here_captain}"
@@ -99,20 +101,27 @@ public class ChallengePrimer extends BaseTest {
     void postRegisterAgain(){
         RegisterUser.registerUserMethod(user);
         Response response = RegisterUser.registerUserMethod(user).then().log().everything().extract().response();
-        assert response.jsonPath().get("flag").equals("${flag_im_still_here_captain}");
+//        assert response.jsonPath().get("flag").equals("${flag_im_still_here_captain}");
+        assertThat(response.jsonPath().getString("flag")).isEqualTo("${flag_im_still_here_captain}");
     }
 
     @Test
     void postLogin(){
         RegisterUser.registerUserMethod(user);
         Response response = LoginUser.loginUserMethod(user);
-        assert response.jsonPath().get("message").equals("Welcome, " + user.getUsername() + ", in the Primer!");
+//        assert response.jsonPath().get("message").equals("Welcome, " + user.getUsername() + ", in the Primer!");
+        assertThat(response.jsonPath().getString("message"))
+                .isEqualTo("Welcome, " + user.getUsername() + ", in the Primer!");
     }
 
 //    "${flag_naughty_aint_ya}"
     @Test
     void postLoginUnsuccessful(){
-        assert LoginUser.loginUserMethod(user).jsonPath().get("flag").equals("${flag_naughty_aint_ya}");
+//        assert LoginUser.loginUserMethod(user).jsonPath().get("flag").equals("${flag_naughty_aint_ya}");
+        assertThat(LoginUser.loginUserMethod(user)
+                .jsonPath()
+                .getString("flag"))
+                .isEqualTo(("${flag_naughty_aint_ya}"));
     }
 
     String information = "Oi! W'at can I do for ya? In this primer for challenges" +
