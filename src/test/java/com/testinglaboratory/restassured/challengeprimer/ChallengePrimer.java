@@ -8,9 +8,10 @@ import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
+import static org.hamcrest.Matchers.equalTo;
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
+import static org.hamcrest.Matchers.equalToCompressingWhiteSpace;
 
 @Slf4j
 public class ChallengePrimer extends BaseTest {
@@ -21,7 +22,8 @@ public class ChallengePrimer extends BaseTest {
                .get("information")
                .then()
                .log()
-               .everything().assertThat().statusCode(HttpStatus.SC_OK);
+               .everything().assertThat().statusCode(HttpStatus.SC_OK)
+               .body("message",equalToCompressingWhiteSpace(information));
     }
 
     @Test
@@ -30,7 +32,9 @@ public class ChallengePrimer extends BaseTest {
                 .get("tryout")
                 .then()
                 .log()
-                .everything().assertThat().statusCode(HttpStatus.SC_OK);
+                .everything().assertThat().statusCode(HttpStatus.SC_OK)
+                .body("message", equalTo("Good! " +
+                "Toy have tried to GET a resource.Now you have to GET something else... /flag"));
     }
 
     @Test
@@ -39,7 +43,9 @@ public class ChallengePrimer extends BaseTest {
                 .get("flag")
                 .then()
                 .log()
-                .everything().assertThat().statusCode(HttpStatus.SC_OK);
+                .everything().assertThat().statusCode(HttpStatus.SC_OK)
+                .body("message",equalTo("Use your exploratory skills" +
+                        " and feel the challenge's theme to obtain flags"));
     }
 
     //"${flag_hello_there}" & "${flag_general_kenobi}"
@@ -49,13 +55,15 @@ public class ChallengePrimer extends BaseTest {
                 .get("flag/1")
                 .then()
                 .log()
-                .everything().assertThat().statusCode(HttpStatus.SC_OK);
+                .everything().assertThat().statusCode(HttpStatus.SC_OK)
+                .body("flag",equalTo("${flag_hello_there}"));
 
         when()
                 .get("flag/6")
                 .then()
                 .log()
-                .everything().assertThat().statusCode(HttpStatus.SC_OK);
+                .everything().assertThat().statusCode(HttpStatus.SC_OK)
+                .body("flag",equalTo("${flag_general_kenobi}"));
     }
 
     @Test
@@ -84,4 +92,10 @@ public class ChallengePrimer extends BaseTest {
     void postLoginUnsuccessful(){
         assert LoginUser.loginUserMethod(user).jsonPath().get("flag").equals("${flag_naughty_aint_ya}");
     }
+
+    String information = "Oi! W'at can I do for ya? In this primer for challenges" +
+            " you'll learn how to look for flags. Remember that this is not purely" +
+            " technical task. You'll role play and use your knowledge to find treasures" +
+            " your looking for. If you have any questions - ask. Try and found as many" +
+            " flags as possible.(Five, there are five.) begin with shooting at /tryout.";
 }
