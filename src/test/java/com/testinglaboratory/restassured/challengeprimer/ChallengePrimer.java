@@ -12,6 +12,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
 import static org.hamcrest.Matchers.equalToCompressingWhiteSpace;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 public class ChallengePrimer extends BaseTest {
