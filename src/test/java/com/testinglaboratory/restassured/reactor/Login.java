@@ -12,6 +12,9 @@ public class Login extends Register{
                 .body(user)
                 .post("/login")
                 .then()
-                .log().everything().extract().response();
+                .log()
+                .everything()
+                .extract()
+                .response();
     }
 }

@@ -4,9 +4,12 @@ import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Test;
 import static io.restassured.RestAssured.when;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.equalToCompressingWhiteSpace;
 
 //TODO EXERCISE create tests for Reactor challenge
-public class ExerciseReactorTest extends BaseSetUp{
+class ExerciseReactorTest extends BaseSetUp{
 
     @Test
     void getInformation(){
@@ -15,19 +18,20 @@ public class ExerciseReactorTest extends BaseSetUp{
                 .log()
                 .everything()
                 .assertThat()
-                .statusCode(HttpStatus.SC_OK);
+                .statusCode(HttpStatus.SC_OK)
+                .assertThat()
+                .body("message", equalTo(informationMessage));
     }
 
     @Test
     void checkIn(){
         Response response = Register.registerUser(user);
-
-        assert response.jsonPath().get("message").equals(registerMessage);
+        assertThat(response.jsonPath().getString("message")).isEqualTo(registerMessage);
     }
 
     @Test
     void getControlRoom(){
-        Response response = acquireControlRoomCredentials();
+        acquireControlRoomCredentials();
     }
 
     @Test
@@ -39,6 +43,14 @@ public class ExerciseReactorTest extends BaseSetUp{
     void reactorAnalysis(){
         analyseReactor();
     }
+
+    String informationMessage = "You are the Tech Commander of RBMK reactor power plant. " +
+            "Your task is to perform the reactor test. Bring the power level above 1000 but below 1500" +
+            " and keep the reactor Operational. Use /{key}/control_room/analysis to peek at reactor core." +
+            " Use /{key}/control_room to see full info about the reactor. Check in at the /desk to get your" +
+            " key to control room. Put in fuel rods or pull out control rods to raise the power." +
+            " Put in control rods or pull out fuel rods to decrease the power. There are 12 flags to find." +
+            " Good luck Commander. ";
 
     String registerMessage = "Take the key to your control room. " +
             "Keep it safe. use it as resource path to check on your RMBK-100 reactor! Use following: " +
@@ -74,7 +86,8 @@ public class ExerciseReactorTest extends BaseSetUp{
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK).extract().response();
 
-        assert response.jsonPath().get("flag").equals("${flag_curious_arent_we_" + user.name + "}");
+        assertThat(response.jsonPath().getString("flag"))
+                .isEqualTo("${flag_curious_arent_we_" + user.name + "}");
     }
 
     private void analyseReactor(){
@@ -88,6 +101,8 @@ public class ExerciseReactorTest extends BaseSetUp{
                 .log()
                 .everything()
                 .assertThat()
-                .statusCode(HttpStatus.SC_OK).extract().response();
+                .statusCode(HttpStatus.SC_OK)
+                .extract()
+                .response();
     }
 }
