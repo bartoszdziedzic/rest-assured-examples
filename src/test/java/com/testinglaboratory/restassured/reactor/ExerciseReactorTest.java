@@ -30,7 +30,8 @@ class ExerciseReactorTest extends BaseSetUp{
 
     @Test
     void getControlRoom(){
-        acquireControlRoomCredentials();
+        Response response = acquireControlRoomCredentials();
+        assertThat(response.jsonPath().getString("message")).isEqualTo("Hello " + user);
     }
 
     @Test
