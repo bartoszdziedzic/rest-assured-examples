@@ -31,7 +31,7 @@ class ExerciseReactorTest extends BaseSetUp{
     @Test
     void getControlRoom(){
         Response response = acquireControlRoomCredentials();
-        assertThat(response.jsonPath().getString("message")).isEqualTo("Hello " + user);
+        assertThat(response.jsonPath().getString("message")).isEqualTo("Hello " + user.name);
     }
 
     @Test
@@ -119,13 +119,15 @@ class ExerciseReactorTest extends BaseSetUp{
 
         String key = response.jsonPath().get("key");
 
-        when()
+        response = when()
                 .get(key + "/control_room")
                 .then()
                 .log()
                 .everything()
                 .assertThat()
-                .statusCode(HttpStatus.SC_OK);
+                .statusCode(HttpStatus.SC_OK)
+                .extract()
+                .response();
         return response;
     }
 
@@ -167,7 +169,7 @@ class ExerciseReactorTest extends BaseSetUp{
 
         String key = response.jsonPath().get("key");
 
-        when()
+        response = when()
                 .get(key + "/reset_progress")
                 .then()
                 .log()

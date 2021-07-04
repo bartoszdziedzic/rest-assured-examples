@@ -6,11 +6,10 @@ import org.apache.http.HttpStatus;
 import static io.restassured.RestAssured.given;
 
 public class Register {
-    protected static Response registerUser(ReactorUser user){
+    static Response registerUser(ReactorUser user){
         return given()
-                .header("Content-Type", "application/json")
-                .when()
                 .body(user)
+                .when()
                 .post("/desk")
                 .then()
                 .log()
