@@ -19,7 +19,6 @@ class ExerciseReactorTest extends BaseSetUp{
                 .everything()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .assertThat()
                 .body("message", equalTo(informationMessage));
     }
 

@@ -13,8 +13,6 @@ public class Register {
                 .body(user)
                 .post("/desk")
                 .then()
-                .assertThat()
-                .statusCode(HttpStatus.SC_CREATED)
                 .log()
                 .everything()
                 .extract()
