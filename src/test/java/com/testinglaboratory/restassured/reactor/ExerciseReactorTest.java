@@ -34,13 +34,69 @@ class ExerciseReactorTest extends BaseSetUp{
     }
 
     @Test
-    void reactorStatus(){
+    void getControlRoomUnsuccessful(){
+
+        when()
+                .get("1/control_room")
+                .then()
+                .log()
+                .everything()
+                .assertThat()
+                .statusCode(HttpStatus.SC_FORBIDDEN)
+                .body("message",equalTo("You're can't get pass this door comrade! ${flag_sneaky_rat}"));
+    }
+
+    @Test
+    void lookIntoReactor(){
         checkReactorStatus();
+    }
+
+    @Test
+    void lookIntoReactorUnsuccessful(){
+        when()
+                .get("1/reactor_core")
+                .then()
+                .log()
+                .everything()
+                .assertThat()
+                .statusCode(HttpStatus.SC_FORBIDDEN)
+                .body("message",equalTo("He's not a Tech Commander!" +
+                        " Meddling with Power Plant! Get him to KGB!!!"));
     }
 
     @Test
     void reactorAnalysis(){
         analyseReactor();
+    }
+
+    @Test
+    void reactorAnalysisUnsuccessful(){
+        when()
+                .get("1/control_room/analysis")
+                .then()
+                .log()
+                .everything()
+                .assertThat()
+                .statusCode(HttpStatus.SC_FORBIDDEN)
+                .body("message",equalTo("He's not a Tech Commander!" +
+                        " Meddling with Power Plant! Get him to KGB!!!"));
+    }
+
+    @Test
+    void resetProgress(){
+        resetReactor();
+    }
+
+    @Test
+    void resetProgressUnsuccessful(){
+        when()
+                .get("1/reset_progress")
+                .then()
+                .log()
+                .everything()
+                .assertThat()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("flag",equalTo("${flag_atomna_elektrostancja_erector}"));
     }
 
     String informationMessage = "You are the Tech Commander of RBMK reactor power plant. " +
@@ -103,5 +159,23 @@ class ExerciseReactorTest extends BaseSetUp{
                 .statusCode(HttpStatus.SC_OK)
                 .extract()
                 .response();
+    }
+
+    private void resetReactor(){
+        Response response = Register.registerUser(user);
+
+        String key = response.jsonPath().get("key");
+
+        when()
+                .get(key + "/reset_progress")
+                .then()
+                .log()
+                .everything()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .extract()
+                .response();
+        assertThat(response.jsonPath().getString("flag"))
+                .isEqualTo("${flag_you_didnt_see_the_graphite_because_its_not_there}");
     }
 }
