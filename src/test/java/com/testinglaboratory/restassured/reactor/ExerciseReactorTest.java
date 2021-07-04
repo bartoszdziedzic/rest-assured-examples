@@ -12,7 +12,7 @@ import static org.hamcrest.Matchers.equalToCompressingWhiteSpace;
 class ExerciseReactorTest extends BaseSetUp{
 
     @Test
-    void getInformation(){
+    void checkInformation(){
         when().get("information")
                 .then()
                 .log()
@@ -23,19 +23,19 @@ class ExerciseReactorTest extends BaseSetUp{
     }
 
     @Test
-    void checkIn(){
+    void checkInAtDesk(){
         Response response = Register.registerUser(user);
         assertThat(response.jsonPath().getString("message")).isEqualTo(registerMessage);
     }
 
     @Test
-    void getControlRoom(){
+    void walkIntoControlRoom(){
         Response response = acquireControlRoomCredentials();
         assertThat(response.jsonPath().getString("message")).isEqualTo("Hello " + user.name);
     }
 
     @Test
-    void getControlRoomUnsuccessful(){
+    void walkIntoControlRoomUnsuccessfully(){
 
         when()
                 .get("1/control_room")
@@ -55,7 +55,7 @@ class ExerciseReactorTest extends BaseSetUp{
     @Test
     void lookIntoReactorUnsuccessful(){
         when()
-                .get("1/reactor_core")
+                .get("fake_key/reactor_core")
                 .then()
                 .log()
                 .everything()
@@ -73,7 +73,7 @@ class ExerciseReactorTest extends BaseSetUp{
     @Test
     void reactorAnalysisUnsuccessful(){
         when()
-                .get("1/control_room/analysis")
+                .get("fake_key/control_room/analysis")
                 .then()
                 .log()
                 .everything()
@@ -100,7 +100,7 @@ class ExerciseReactorTest extends BaseSetUp{
                 .body("flag",equalTo("${flag_atomna_elektrostancja_erector}"));
     }
 
-    String informationMessage = "You are the Tech Commander of RBMK reactor power plant. " +
+    final String informationMessage = "You are the Tech Commander of RBMK reactor power plant. " +
             "Your task is to perform the reactor test. Bring the power level above 1000 but below 1500" +
             " and keep the reactor Operational. Use /{key}/control_room/analysis to peek at reactor core." +
             " Use /{key}/control_room to see full info about the reactor. Check in at the /desk to get your" +
