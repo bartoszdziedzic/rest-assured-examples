@@ -13,7 +13,5 @@ public class RegisterUser {
                 .when()
                 .body(user)
                 .post("/register");
-//                .then()
-//                .log().everything().extract().response();
     }
 }

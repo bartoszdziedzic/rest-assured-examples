@@ -1,25 +1,22 @@
 package com.testinglaboratory.restassured.challengeprimer;
 
-import io.restassured.RestAssured;
+
 import io.restassured.response.Response;
-import io.restassured.response.ResponseBodyExtractionOptions;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
-import org.json.JSONObject;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.hamcrest.Matchers.equalTo;
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
-import static org.hamcrest.Matchers.equalToCompressingWhiteSpace;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.equalToCompressingWhiteSpace;
 
 @Slf4j
-public class ChallengePrimer extends BaseTest {
+class ChallengePrimerTest extends BaseTest {
 
     @Test
     void getInformation(){
@@ -91,7 +88,6 @@ public class ChallengePrimer extends BaseTest {
     @Test
     void postRegisterSuccessful(){
         Response response = RegisterUser.registerUserMethod(user);
-//        assert response.jsonPath().get("message").equals("User " + user.getUsername() + " registered");
         assertThat(response.jsonPath().getString("message"))
                 .isEqualTo("User " + user.getUsername() + " registered");
  }
@@ -101,7 +97,6 @@ public class ChallengePrimer extends BaseTest {
     void postRegisterAgain(){
         RegisterUser.registerUserMethod(user);
         Response response = RegisterUser.registerUserMethod(user).then().log().everything().extract().response();
-//        assert response.jsonPath().get("flag").equals("${flag_im_still_here_captain}");
         assertThat(response.jsonPath().getString("flag")).isEqualTo("${flag_im_still_here_captain}");
     }
 
@@ -109,7 +104,6 @@ public class ChallengePrimer extends BaseTest {
     void postLogin(){
         RegisterUser.registerUserMethod(user);
         Response response = LoginUser.loginUserMethod(user);
-//        assert response.jsonPath().get("message").equals("Welcome, " + user.getUsername() + ", in the Primer!");
         assertThat(response.jsonPath().getString("message"))
                 .isEqualTo("Welcome, " + user.getUsername() + ", in the Primer!");
     }
@@ -117,7 +111,6 @@ public class ChallengePrimer extends BaseTest {
 //    "${flag_naughty_aint_ya}"
     @Test
     void postLoginUnsuccessful(){
-//        assert LoginUser.loginUserMethod(user).jsonPath().get("flag").equals("${flag_naughty_aint_ya}");
         assertThat(LoginUser.loginUserMethod(user)
                 .jsonPath()
                 .getString("flag"))
