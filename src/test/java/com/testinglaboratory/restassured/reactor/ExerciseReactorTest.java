@@ -1,14 +1,21 @@
 package com.testinglaboratory.restassured.reactor;
 
 import io.restassured.response.Response;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
+import java.util.Map;
+
+import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.equalToCompressingWhiteSpace;
 
 //TODO EXERCISE create tests for Reactor challenge
+@Slf4j
 class ExerciseReactorTest extends BaseSetUp{
 
     @Test
@@ -32,6 +39,7 @@ class ExerciseReactorTest extends BaseSetUp{
     void walkIntoControlRoom(){
         Response response = acquireControlRoomCredentials();
         assertThat(response.jsonPath().getString("message")).isEqualTo("Hello " + user.name);
+        assertThat(response.jsonPath().getString("'reactor data'._ReactorCore__state")).isEqualTo("Operational");
     }
 
     @Test
@@ -100,6 +108,27 @@ class ExerciseReactorTest extends BaseSetUp{
                 .body("flag",equalTo("${flag_atomna_elektrostancja_erector}"));
     }
 
+    @Test
+    void meddleWithControlRodsUntilUnstable(){
+        Response response = acquireControlRoomCredentials();
+        String key = response.jsonPath().getString("'reactor data'._ReactorCore__uuid");
+        List<String> controlRods= response.jsonPath().getList("'reactor data'._ReactorCore__control_rods");
+        List<String> fuelRods= response.jsonPath().getList("'reactor data'._ReactorCore__fuel_rods");
+        Integer power = response.jsonPath().getInt("'reactor data'._ReactorCore__power");
+        String reactorState = response.jsonPath().getString("'reactor data'._ReactorCore__state");
+//dodac do pętli zerkanie w reaktor w celu sprawdzenia statusu
+            for (int rodIndex = 0; rodIndex < 50; rodIndex++) {
+                if(!reactorState.equals("Unstable")){
+                given().pathParam(
+                        "key", key).pathParam(
+                        "rodIndex", rodIndex)
+                        .when()
+                        .delete("{key}/control_room/control_rods/{rodIndex}");
+                }
+        }
+            assertThat(response.jsonPath().getString("'reactor data'._ReactorCore__state")).isEqualTo("Unstable");
+    }
+
     final String informationMessage = "You are the Tech Commander of RBMK reactor power plant. " +
             "Your task is to perform the reactor test. Bring the power level above 1000 but below 1500" +
             " and keep the reactor Operational. Use /{key}/control_room/analysis to peek at reactor core." +
@@ -108,7 +137,7 @@ class ExerciseReactorTest extends BaseSetUp{
             " Put in control rods or pull out fuel rods to decrease the power. There are 12 flags to find." +
             " Good luck Commander. ";
 
-    String registerMessage = "Take the key to your control room. " +
+    final String registerMessage = "Take the key to your control room. " +
             "Keep it safe. use it as resource path to check on your RMBK-100 reactor! Use following: " +
             "/{key}/control_room to gain knowledge how to operate reactor. You may see if the " +
             "core is intact here: /{key}/reactor_core . If anything goes wrong push AZ-5 safety " +
